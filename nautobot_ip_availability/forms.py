@@ -1,7 +1,6 @@
 """Forms for nautobot_ip_availability."""
 
 from django import forms
-
 from nautobot.apps.forms import DynamicModelChoiceField
 from nautobot.ipam.models import Namespace, Prefix
 

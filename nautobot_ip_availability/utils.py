@@ -1,6 +1,5 @@
 """Utility functions for IP prefix availability calculations."""
 
-from nautobot.ipam.models import Prefix
 
 
 DEFAULT_RESULT_LIMIT = 1000

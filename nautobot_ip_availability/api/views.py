@@ -1,10 +1,9 @@
 """API views for nautobot_ip_availability."""
 
+from nautobot.ipam.models import Prefix
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from nautobot.ipam.models import Prefix
 
 from nautobot_ip_availability.api.serializers import (
     AvailablePrefixResultSerializer,

@@ -1,8 +1,6 @@
 """Unit tests for views."""
 
-from django.test import TestCase
 from django.urls import reverse
-
 from nautobot.core.testing import TestCase as NautobotTestCase
 
 from nautobot_ip_availability.tests.fixtures import create_prefix_test_data

@@ -1,7 +1,6 @@
 """Unit tests for the REST API."""
 
 from django.urls import reverse
-
 from nautobot.core.testing import APITestCase
 
 from nautobot_ip_availability.tests.fixtures import create_prefix_test_data

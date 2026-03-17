@@ -3,10 +3,9 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.utils import timezone
-
 from nautobot.apps.views import GenericView
 from nautobot.extras.models import Status
-from nautobot.ipam.models import Namespace, Prefix, RIR
+from nautobot.ipam.models import RIR, Namespace, Prefix
 
 from nautobot_ip_availability.forms import PrefixAvailabilityForm, QuickPrefixCreateForm
 from nautobot_ip_availability.utils import get_available_prefixes_for_parent
