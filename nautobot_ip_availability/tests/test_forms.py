@@ -16,10 +16,12 @@ class PrefixAvailabilityFormTest(TestCase):
 
     def test_valid_form(self):
         """Form with valid parent prefix and prefix lengths."""
-        form = PrefixAvailabilityForm(data={
-            "parent_prefix": self.parent.pk,
-            "prefix_lengths": "24,28",
-        })
+        form = PrefixAvailabilityForm(
+            data={
+                "parent_prefix": self.parent.pk,
+                "prefix_lengths": "24,28",
+            }
+        )
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(form.cleaned_data["prefix_lengths"], [24, 28])
 
@@ -37,36 +39,44 @@ class PrefixAvailabilityFormTest(TestCase):
 
     def test_prefix_length_too_small(self):
         """Prefix length <= parent prefix length should be invalid."""
-        form = PrefixAvailabilityForm(data={
-            "parent_prefix": self.parent.pk,
-            "prefix_lengths": "20",
-        })
+        form = PrefixAvailabilityForm(
+            data={
+                "parent_prefix": self.parent.pk,
+                "prefix_lengths": "20",
+            }
+        )
         self.assertFalse(form.is_valid())
         self.assertIn("prefix_lengths", form.errors)
 
     def test_prefix_length_with_slash(self):
         """Prefix lengths with leading slashes should be accepted."""
-        form = PrefixAvailabilityForm(data={
-            "parent_prefix": self.parent.pk,
-            "prefix_lengths": "/24, /28",
-        })
+        form = PrefixAvailabilityForm(
+            data={
+                "parent_prefix": self.parent.pk,
+                "prefix_lengths": "/24, /28",
+            }
+        )
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(form.cleaned_data["prefix_lengths"], [24, 28])
 
     def test_deduplication(self):
         """Duplicate prefix lengths should be deduplicated."""
-        form = PrefixAvailabilityForm(data={
-            "parent_prefix": self.parent.pk,
-            "prefix_lengths": "24, 24, 28",
-        })
+        form = PrefixAvailabilityForm(
+            data={
+                "parent_prefix": self.parent.pk,
+                "prefix_lengths": "24, 24, 28",
+            }
+        )
         self.assertTrue(form.is_valid(), form.errors)
         self.assertEqual(form.cleaned_data["prefix_lengths"], [24, 28])
 
     def test_invalid_prefix_length_string(self):
         """Non-numeric prefix length should be invalid."""
-        form = PrefixAvailabilityForm(data={
-            "parent_prefix": self.parent.pk,
-            "prefix_lengths": "abc",
-        })
+        form = PrefixAvailabilityForm(
+            data={
+                "parent_prefix": self.parent.pk,
+                "prefix_lengths": "abc",
+            }
+        )
         self.assertFalse(form.is_valid())
         self.assertIn("prefix_lengths", form.errors)

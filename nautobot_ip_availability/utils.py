@@ -60,4 +60,5 @@ def _make_result(network, parent_prefix):
         "ip_version": network.version,
         "size": network.size,
         "parent_prefix": str(parent_prefix.prefix),
+        "namespace_id": str(parent_prefix.namespace_id),
     }

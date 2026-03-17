@@ -26,10 +26,13 @@ class PrefixAvailabilityViewTest(NautobotTestCase):
     def test_post_valid_data_returns_results(self):
         """POST with valid data should return results table."""
         url = reverse("plugins:nautobot_ip_availability:prefix_availability")
-        response = self.client.post(url, {
-            "parent_prefix": self.parent.pk,
-            "prefix_lengths": "24",
-        })
+        response = self.client.post(
+            url,
+            {
+                "parent_prefix": self.parent.pk,
+                "prefix_lengths": "24",
+            },
+        )
         self.assertEqual(response.status_code, 200)
         self.assertIn("table", response.context)
         self.assertGreater(response.context["result_count"], 0)
@@ -37,18 +40,24 @@ class PrefixAvailabilityViewTest(NautobotTestCase):
     def test_post_invalid_prefix_length(self):
         """POST with prefix length <= parent should show form errors."""
         url = reverse("plugins:nautobot_ip_availability:prefix_availability")
-        response = self.client.post(url, {
-            "parent_prefix": self.parent.pk,
-            "prefix_lengths": "20",
-        })
+        response = self.client.post(
+            url,
+            {
+                "parent_prefix": self.parent.pk,
+                "prefix_lengths": "20",
+            },
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context["form"].errors)
 
     def test_post_missing_parent(self):
         """POST without parent prefix should show form errors."""
         url = reverse("plugins:nautobot_ip_availability:prefix_availability")
-        response = self.client.post(url, {
-            "prefix_lengths": "24",
-        })
+        response = self.client.post(
+            url,
+            {
+                "prefix_lengths": "24",
+            },
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context["form"].errors)
