@@ -1,0 +1,29 @@
+{
+    "cookiecutter": {
+        "codeowner_github_usernames": "nrtc-ops",
+        "full_name": "NRTC",
+        "email": "devsecops@nrtc.coop",
+        "github_org": "nrtc-ops",
+        "app_name": "nautobot_ip_availability",
+        "verbose_name": "Nautobot IP Availability",
+        "app_slug": "nautobot-ip-availability",
+        "project_slug": "nautobot-app-ip-availability",
+        "repo_url": "https://github.com/nrtc-ops/nautobot-app-ip-availability",
+        "base_url": "ip-availability",
+        "camel_name": "NautobotIpAvailability",
+        "project_short_description": "Nautobot IP Availability",
+        "model_class_name": "NautobotIpAvailabilityExampleModel",
+        "open_source_license": "Apache-2.0",
+        "docs_base_url": "https://docs.nautobot.com",
+        "docs_app_url": "https://docs.nautobot.com/projects/nautobot-ip-availability/en/latest",
+        "_extensions": [
+            "local_extensions.camel_case_to_kebab",
+            "local_extensions.camel_case_to_words",
+            "local_extensions.NautobotVersions"
+        ],
+        "_template": "https://github.com/nautobot/cookiecutter-nautobot-app",
+        "_output_dir": "/Users/mdean/Desktop/devsecops/github/cookiecutter-nautobot-app/outputs",
+        "_repo_dir": "/Users/mdean/.cookiecutters/cookiecutter-nautobot-app/nautobot-app",
+        "_checkout": null
+    }
+}

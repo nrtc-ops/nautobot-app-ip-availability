@@ -309,3 +309,7 @@ public
 /compose.yaml
 /dump.sql
 /nautobot_ip_availability/static/nautobot_ip_availability/docs
+
+# Claude Memsearch
+.memsearch/
+.claude/

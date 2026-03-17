@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load render_table from django_tables2 %}
+
+{% block title %}IP Prefix Availability{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Find Available Prefixes</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group{% if field.errors %} has-error{% endif %}">
+                        <label for="{{ field.id_for_label }}" class="col-md-3 control-label">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        <div class="col-md-9">
+                            {{ field }}
+                            {% if field.help_text %}
+                            <span class="help-block">{{ field.help_text }}</span>
+                            {% endif %}
+                            {% for error in field.errors %}
+                            <span class="help-block text-danger">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="form-group">
+                        <div class="col-md-9 col-md-offset-3">
+                            <button type="submit" class="btn btn-primary">
+                                Search Available Prefixes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if table %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Available Prefixes
+                    <span class="badge">{{ result_count }}</span>
+                    {% if truncated %}
+                    <span class="label label-warning">Results truncated to 1,000</span>
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="panel-body table-responsive">
+                {% render_table table %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
