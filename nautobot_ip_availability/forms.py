@@ -40,8 +40,8 @@ class PrefixAvailabilityForm(forms.Form):
                 continue
             try:
                 length = int(part)
-            except ValueError:
-                raise forms.ValidationError(f"Invalid prefix length: '{part}'. Must be an integer.")
+            except ValueError as exc:
+                raise forms.ValidationError(f"Invalid prefix length: '{part}'. Must be an integer.") from exc
 
             if length < 1 or length > 128:
                 raise forms.ValidationError(f"Prefix length {length} out of range (1-128).")

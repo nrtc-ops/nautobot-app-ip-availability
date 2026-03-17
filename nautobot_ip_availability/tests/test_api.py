@@ -6,7 +6,7 @@ from nautobot.core.testing import APITestCase
 from nautobot_ip_availability.tests.fixtures import create_prefix_test_data
 
 
-class AvailablePrefixesAPITest(APITestCase):
+class AvailablePrefixesAPITest(APITestCase):  # pylint: disable=too-many-ancestors
     """Test the AvailablePrefixesAPIView."""
 
     @classmethod

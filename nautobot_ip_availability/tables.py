@@ -12,7 +12,7 @@ class AvailablePrefixTable(tables.Table):
     size = tables.Column(verbose_name="Addresses")
     parent_prefix = tables.Column(verbose_name="Parent Prefix")
 
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
         """Meta attributes."""
 
         attrs = {"class": "table table-hover table-headings"}
