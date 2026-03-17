@@ -22,6 +22,14 @@ class PrefixAvailabilityRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError("At least one prefix length is required.")
         return sorted(set(value))
 
+    def create(self, validated_data):
+        """Not used — this serializer is for input validation only."""
+        raise NotImplementedError("PrefixAvailabilityRequestSerializer is read-only.")
+
+    def update(self, instance, validated_data):
+        """Not used — this serializer is for input validation only."""
+        raise NotImplementedError("PrefixAvailabilityRequestSerializer is read-only.")
+
 
 class AvailablePrefixResultSerializer(serializers.Serializer):
     """Serializes an available prefix result (read-only)."""
