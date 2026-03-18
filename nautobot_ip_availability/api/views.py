@@ -1,57 +1,49 @@
 """API views for nautobot_ip_availability."""
 
-from nautobot.ipam.models import Prefix
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from nautobot_ip_availability.api.serializers import (
-    AvailablePrefixResultSerializer,
-    PrefixAvailabilityRequestSerializer,
-)
-from nautobot_ip_availability.utils import get_available_prefixes_for_parent
+from nautobot_ip_availability.api.serializers import AvailablePrefixResultSerializer
+from nautobot_ip_availability.utils import find_available_prefixes
 
 
 class AvailablePrefixesAPIView(APIView):
-    """API endpoint to query available IP prefixes within a parent prefix."""
+    """API endpoint to query available IP prefixes across all Leasable supernets."""
 
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        """Find available prefixes based on parent prefix and desired CIDR sizes."""
-        serializer = PrefixAvailabilityRequestSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        """Find available prefixes of the requested size across all Leasable supernets."""
+        prefix_length = request.data.get("prefix_length")
 
-        parent_prefix_id = serializer.validated_data["parent_prefix"]
-        prefix_lengths = serializer.validated_data["prefix_lengths"]
-
-        try:
-            parent_prefix = Prefix.objects.get(pk=parent_prefix_id)
-        except Prefix.DoesNotExist:
+        if prefix_length is None:
             return Response(
-                {"detail": f"Prefix with id '{parent_prefix_id}' not found."},
-                status=status.HTTP_404_NOT_FOUND,
+                {"detail": "prefix_length is required."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Validate prefix lengths against parent
-        for length in prefix_lengths:
-            if length <= parent_prefix.prefix_length:
-                return Response(
-                    {"detail": f"Prefix length /{length} must be greater than parent /{parent_prefix.prefix_length}."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+        try:
+            prefix_length = int(prefix_length)
+        except (TypeError, ValueError):
+            return Response(
+                {"detail": "prefix_length must be an integer."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        results, truncated = get_available_prefixes_for_parent(
-            parent_prefix=parent_prefix,
-            prefix_lengths=prefix_lengths,
-        )
+        if prefix_length < 1 or prefix_length > 128:
+            return Response(
+                {"detail": "prefix_length must be between 1 and 128."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        results, truncated = find_available_prefixes(prefix_length=prefix_length)
 
         result_serializer = AvailablePrefixResultSerializer(results, many=True)
         return Response(
             {
-                "parent_prefix": str(parent_prefix.prefix),
-                "requested_prefix_lengths": prefix_lengths,
+                "prefix_length": prefix_length,
                 "count": len(results),
                 "truncated": truncated,
                 "results": result_serializer.data,

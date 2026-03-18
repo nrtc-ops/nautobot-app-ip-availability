@@ -3,59 +3,63 @@
 {% block title %}Prefix Reserved{% endblock title %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="mdi mdi-check-circle"></i> Prefix Reserved Successfully</h3>
-            </div>
-            <div class="panel-body">
-                <p>The following prefix has been reserved. Copy these details back into your ticket.</p>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="mdi mdi-check-circle"></i> Prefix Reserved Successfully</h3>
+                </div>
+                <div class="panel-body">
+                    <p>The following prefix has been reserved. Copy these details back into your ticket.</p>
 
-                <table class="table table-bordered" style="margin-top: 15px;">
-                    <tbody>
-                        <tr>
-                            <th style="width: 200px;">Prefix</th>
-                            <td><strong>{{ prefix }}</strong></td>
-                        </tr>
-                        <tr>
-                            <th>Namespace</th>
-                            <td>{{ namespace }}</td>
-                        </tr>
-                        <tr>
-                            <th>Description</th>
-                            <td>{{ description }}</td>
-                        </tr>
-                        <tr>
-                            <th>ServiceDesk Ticket #</th>
-                            <td>{{ sdp_ticket_id }}</td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>Reserved</td>
-                        </tr>
-                        <tr>
-                            <th>Type</th>
-                            <td>Network</td>
-                        </tr>
-                        <tr>
-                            <th>RIR</th>
-                            <td>ARIN</td>
-                        </tr>
-                        <tr>
-                            <th>Date Allocated</th>
-                            <td>{{ date_allocated|date:"N j, Y g:i A" }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table class="table table-bordered" style="margin-top: 15px;">
+                        <tbody>
+                            <tr>
+                                <th style="width: 200px;">Prefix</th>
+                                <td><strong>{{ prefix }}</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Namespace</th>
+                                <td>{{ namespace }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ description }}</td>
+                            </tr>
+                            <tr>
+                                <th>ServiceDesk Ticket #</th>
+                                <td>{{ sdp_ticket_id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td>Reserved</td>
+                            </tr>
+                            <tr>
+                                <th>Type</th>
+                                <td>Network</td>
+                            </tr>
+                            <tr>
+                                <th>Role</th>
+                                <td>{{ role }}</td>
+                            </tr>
+                            <tr>
+                                <th>RIR</th>
+                                <td>ARIN</td>
+                            </tr>
+                            <tr>
+                                <th>Date Allocated</th>
+                                <td>{{ date_allocated|date:"N j, Y g:i A" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <div style="margin-top: 20px;">
-                    <a href="{% url 'plugins:nautobot_ip_availability:prefix_availability' %}" class="btn btn-primary">
-                        <i class="mdi mdi-magnify"></i> Reserve Another Prefix
-                    </a>
+                    <div style="margin-top: 20px;">
+                        <a href="{% url 'plugins:nautobot_ip_availability:prefix_availability' %}" class="btn btn-primary">
+                            <i class="mdi mdi-magnify"></i> Reserve Another Prefix
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock content %}
