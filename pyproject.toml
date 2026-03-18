@@ -2,7 +2,7 @@
 name = "nautobot-ip-availability"
 version = "0.1.0a1"
 description = "Nautobot IP Availability"
-authors = ["NRTC <devsecops@nrtc.coop>"]
+authors = ["NRTC <devsecops@nrtc.coop>","Michael Dean <mdean@nrtc.coop>"]
 license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://github.com/nrtc-ops/nautobot-app-ip-availability"
@@ -11,7 +11,7 @@ documentation = "https://docs.nautobot.com/projects/nautobot-ip-availability/en/
 keywords = ["nautobot", "nautobot-app", "nautobot-plugin"]
 classifiers = [
     "Intended Audience :: Developers",
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",

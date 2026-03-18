@@ -1,14 +1,6 @@
 # Nautobot IP Availability
 
-<!--
-Developer Note - Remove Me!
-
-The README will have certain links/images broken until the PR is merged into `develop`. Update the GitHub links with whichever branch you're using (main etc.) if different.
-
-The logo of the project is a placeholder (docs/images/icon-nautobot-ip-availability.png) - please replace it with your app icon, making sure it's at least 200x200px and has a transparent background!
-
-To avoid extra work and temporary links, make sure that publishing docs (or merging a PR) is done at the same time as setting up the docs site on RTD, then test everything.
--->
+> **⚠️ Alpha Software**: This project is currently in **alpha** and is under active development. APIs, configuration options, and behavior may change between releases. Use in production environments is not recommended until a stable release is published.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/nrtc-ops/nautobot-app-ip-availability/develop/docs/images/icon-nautobot-ip-availability.png" class="logo" height="200px">
@@ -16,6 +8,7 @@ To avoid extra work and temporary links, make sure that publishing docs (or merg
   <a href="https://github.com/nrtc-ops/nautobot-app-ip-availability/actions"><img src="https://github.com/nrtc-ops/nautobot-app-ip-availability/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://docs.nautobot.com/projects/nautobot-ip-availability/en/latest/"><img src="https://readthedocs.org/projects/nautobot-app-ip-availability/badge/"></a>
   <a href="https://pypi.org/project/nautobot-ip-availability/"><img src="https://img.shields.io/pypi/v/nautobot-ip-availability"></a>
+  <a href="https://pypi.org/project/nautobot-custom-tunnel-builder/"><img src="https://img.shields.io/badge/status-alpha-orange"></a>
   <a href="https://pypi.org/project/nautobot-ip-availability/"><img src="https://img.shields.io/pypi/dm/nautobot-ip-availability"></a>
   <br>
   An <a href="https://networktocode.com/nautobot-apps/">App</a> for <a href="https://nautobot.com/">Nautobot</a>.
