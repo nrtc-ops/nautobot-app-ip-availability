@@ -1,40 +1,44 @@
 """Utility functions for IP prefix availability calculations."""
 
+from nautobot.ipam.models import Prefix
+
 DEFAULT_RESULT_LIMIT = 1000
 
 
-def get_available_prefixes_for_parent(parent_prefix, prefix_lengths, limit=DEFAULT_RESULT_LIMIT):
-    """Calculate available prefixes of specified sizes within a parent prefix.
+def find_available_prefixes(prefix_length, limit=DEFAULT_RESULT_LIMIT):
+    """Search all Leasable supernets for available prefixes of the requested size.
 
     Args:
-        parent_prefix: A Prefix model instance (the parent to search within).
-        prefix_lengths: List of integer prefix lengths (e.g., [24, 28]).
+        prefix_length: Desired prefix length (e.g., 24 for /24).
         limit: Maximum number of results to return (safety guard for large spaces).
 
     Returns:
         Tuple of (results_list, truncated_bool) where results_list contains dicts:
-        [{"prefix": "10.0.1.0/24", "prefix_length": 24, "ip_version": 4, "size": 256}, ...]
+        [{"prefix": "10.0.1.0/24", "prefix_length": 24, ...}, ...]
     """
-    available_set = parent_prefix.get_available_prefixes()  # returns netaddr.IPSet
+    leasable_parents = Prefix.objects.filter(
+        status__name="Leasable",
+        prefix_length__lt=prefix_length,
+    ).select_related("namespace")
 
     results = []
     truncated = False
 
-    for length in sorted(prefix_lengths):
-        if length <= parent_prefix.prefix_length:
-            continue  # Skip prefix lengths that are equal to or shorter than parent
+    for parent in leasable_parents:
+        if truncated:
+            break
+
+        available_set = parent.get_available_prefixes()
 
         for cidr in available_set.iter_cidrs():
-            if cidr.prefixlen > length:
-                continue  # This CIDR block is too small for the requested prefix length
+            if cidr.prefixlen > prefix_length:
+                continue
 
-            if cidr.prefixlen == length:
-                # Exact match — the available block is exactly the requested size
-                results.append(_make_result(cidr, parent_prefix))
+            if cidr.prefixlen == prefix_length:
+                results.append(_make_result(cidr, parent))
             else:
-                # Break the larger available block into subnets of the requested size
-                for subnet in cidr.subnet(length):
-                    results.append(_make_result(subnet, parent_prefix))
+                for subnet in cidr.subnet(prefix_length):
+                    results.append(_make_result(subnet, parent))
                     if len(results) >= limit:
                         truncated = True
                         break
@@ -42,9 +46,6 @@ def get_available_prefixes_for_parent(parent_prefix, prefix_lengths, limit=DEFAU
             if len(results) >= limit:
                 truncated = True
                 break
-
-        if truncated:
-            break
 
     return results, truncated
 

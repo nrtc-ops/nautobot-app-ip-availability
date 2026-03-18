@@ -22,40 +22,23 @@ class PrefixAvailabilityViewTest(NautobotTestCase):
         self.assertIn("form", response.context)
 
     def test_post_valid_data_returns_results(self):
-        """POST with valid data should return results table."""
+        """POST with valid prefix_length should return results."""
         url = reverse("plugins:nautobot_ip_availability:prefix_availability")
-        response = self.client.post(
-            url,
-            {
-                "parent_prefix": self.parent.pk,
-                "prefix_lengths": "24",
-            },
-        )
+        response = self.client.post(url, {"prefix_length": 24})
         self.assertEqual(response.status_code, 200)
         self.assertIn("results", response.context)
         self.assertGreater(response.context["result_count"], 0)
 
-    def test_post_invalid_prefix_length(self):
-        """POST with prefix length <= parent should show form errors."""
+    def test_post_missing_prefix_length(self):
+        """POST without prefix_length should show form errors."""
         url = reverse("plugins:nautobot_ip_availability:prefix_availability")
-        response = self.client.post(
-            url,
-            {
-                "parent_prefix": self.parent.pk,
-                "prefix_lengths": "20",
-            },
-        )
+        response = self.client.post(url, {})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context["form"].errors)
 
-    def test_post_missing_parent(self):
-        """POST without parent prefix should show form errors."""
+    def test_post_invalid_prefix_length(self):
+        """POST with non-numeric prefix_length should show form errors."""
         url = reverse("plugins:nautobot_ip_availability:prefix_availability")
-        response = self.client.post(
-            url,
-            {
-                "prefix_lengths": "24",
-            },
-        )
+        response = self.client.post(url, {"prefix_length": "abc"})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context["form"].errors)

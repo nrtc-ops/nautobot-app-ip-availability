@@ -3,101 +3,102 @@
 {% block title %}IP Prefix Availability{% endblock title %}
 
 {% block content %}
-<div class="row mb-3">
-    <div class="col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Find Available Prefixes</h3>
-            </div>
-            <div class="panel-body">
-                <form method="post" class="form-horizontal">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="form-group{% if field.errors %} has-error{% endif %}">
-                        <label for="{{ field.id_for_label }}" class="col-md-3 control-label">
-                            {{ field.label }}
-                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
-                        </label>
-                        <div class="col-md-9">
-                            {{ field }}
-                            {% if field.help_text %}
-                            <span class="help-block">{{ field.help_text }}</span>
-                            {% endif %}
-                            {% for error in field.errors %}
-                            <span class="help-block text-danger">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <div class="form-group">
-                        <div class="col-md-9 col-md-offset-3">
-                            <button type="submit" class="btn btn-primary">
-                                Search Available Prefixes
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% if results is not None %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    Available Prefixes
-                    <span class="badge">{{ result_count }}</span>
-                    {% if truncated %}
-                    <span class="label label-warning">Results truncated to 1,000</span>
-                    {% endif %}
-                </h3>
-            </div>
-            <div class="panel-body table-responsive">
-                {% if results %}
-                <table class="table table-hover table-headings">
-                    <thead>
-                        <tr>
-                            <th>Available Prefix</th>
-                            <th>Prefix Length</th>
-                            <th>IP Version</th>
-                            <th>Addresses</th>
-                            <th>Parent Prefix</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in results %}
-                        <tr>
-                            <td>
-                                <a href="{% url 'plugins:nautobot_ip_availability:quick_create' %}?prefix={{ row.prefix }}&namespace={{ row.namespace_id }}"
-                                   title="Reserve this prefix">
-                                    {{ row.prefix }}
-                                </a>
-                            </td>
-                            <td>/{{ row.prefix_length }}</td>
-                            <td>IPv{{ row.ip_version }}</td>
-                            <td>{{ row.size }}</td>
-                            <td>{{ row.parent_prefix }}</td>
-                            <td>
-                                <a href="{% url 'plugins:nautobot_ip_availability:quick_create' %}?prefix={{ row.prefix }}&namespace={{ row.namespace_id }}"
-                                   class="btn btn-xs btn-success"
-                                   title="Reserve this prefix">
-                                    <i class="mdi mdi-plus-thick"></i> Reserve
-                                </a>
-                            </td>
-                        </tr>
+    <div class="row mb-3">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Find Available Prefixes</h3>
+                </div>
+                <div class="panel-body">
+                    <p class="text-muted">Enter a prefix size and all Leasable supernets will be searched for available space.</p>
+                    <form method="post" class="form-horizontal">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                                <label for="{{ field.id_for_label }}" class="col-md-4 control-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                </label>
+                                <div class="col-md-8">
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <span class="help-block">{{ field.help_text }}</span>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <span class="help-block text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="text-muted">No available prefixes found for the requested sizes.</p>
-                {% endif %}
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Search Available Prefixes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-{% endif %}
+
+    {% if results is not None %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Available Prefixes
+                            <span class="badge">{{ result_count }}</span>
+                            {% if truncated %}
+                                <span class="label label-warning">Results truncated to 1,000</span>
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <div class="panel-body table-responsive">
+                        {% if results %}
+                            <table class="table table-hover table-headings">
+                                <thead>
+                                    <tr>
+                                        <th>Available Prefix</th>
+                                        <th>Prefix Length</th>
+                                        <th>IP Version</th>
+                                        <th>Addresses</th>
+                                        <th>Leasable Supernet</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in results %}
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'plugins:nautobot_ip_availability:quick_create' %}?prefix={{ row.prefix }}&namespace={{ row.namespace_id }}"
+                                                   title="Reserve this prefix">
+                                                    {{ row.prefix }}
+                                                </a>
+                                            </td>
+                                            <td>/{{ row.prefix_length }}</td>
+                                            <td>IPv{{ row.ip_version }}</td>
+                                            <td>{{ row.size }}</td>
+                                            <td>{{ row.parent_prefix }}</td>
+                                            <td>
+                                                <a href="{% url 'plugins:nautobot_ip_availability:quick_create' %}?prefix={{ row.prefix }}&namespace={{ row.namespace_id }}"
+                                                   class="btn btn-xs btn-success"
+                                                   title="Reserve this prefix">
+                                                    <i class="mdi mdi-plus-thick"></i> Reserve
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p class="text-muted">No available prefixes found for the requested size.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

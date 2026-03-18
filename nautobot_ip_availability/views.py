@@ -4,15 +4,15 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from nautobot.apps.views import GenericView
-from nautobot.extras.models import Status
+from nautobot.extras.models import Role, Status
 from nautobot.ipam.models import RIR, Namespace, Prefix
 
 from nautobot_ip_availability.forms import PrefixAvailabilityForm, QuickPrefixCreateForm
-from nautobot_ip_availability.utils import get_available_prefixes_for_parent
+from nautobot_ip_availability.utils import find_available_prefixes
 
 
 class PrefixAvailabilityView(GenericView):
-    """View for querying available IP prefixes within a parent prefix."""
+    """View for finding available IP prefixes across all Leasable supernets."""
 
     def get(self, request):
         """Render the empty query form."""
@@ -20,19 +20,17 @@ class PrefixAvailabilityView(GenericView):
         return render(request, "nautobot_ip_availability/prefix_availability.html", {"form": form})
 
     def post(self, request):
-        """Process the form and display available prefixes."""
+        """Search all Leasable supernets for available prefixes."""
         form = PrefixAvailabilityForm(request.POST)
         results = None
         result_count = 0
         truncated = False
 
         if form.is_valid():
-            parent_prefix = form.cleaned_data["parent_prefix"]
-            prefix_lengths = form.cleaned_data["prefix_lengths"]
+            prefix_length = form.cleaned_data["prefix_length"]
 
-            results, truncated = get_available_prefixes_for_parent(
-                parent_prefix=parent_prefix,
-                prefix_lengths=prefix_lengths,
+            results, truncated = find_available_prefixes(
+                prefix_length=prefix_length,
             )
             result_count = len(results)
 
@@ -49,7 +47,7 @@ class PrefixAvailabilityView(GenericView):
 
 
 class QuickPrefixCreateView(GenericView):
-    """Guided prefix creation — auto-sets status=Reserved, type=network, rir=ARIN, date_allocated=now."""
+    """Guided prefix creation — auto-sets status, type, role, rir, date_allocated."""
 
     def get(self, request):
         """Show the simplified create form with prefix details."""
@@ -104,13 +102,12 @@ class QuickPrefixCreateView(GenericView):
                 },
             )
 
-        # Check that "Reserved" status exists for Prefix
+        # Look up required objects
         reserved_status = Status.objects.get_for_model(Prefix).filter(name="Reserved").first()
         if not reserved_status:
             messages.error(request, "Status 'Reserved' not found. Please create it in Nautobot first.")
             return redirect("plugins:nautobot_ip_availability:prefix_availability")
 
-        # Check prefix doesn't already exist in this namespace
         if Prefix.objects.filter(prefix=prefix_cidr, namespace=namespace).exists():
             messages.error(request, f"Prefix {prefix_cidr} already exists in namespace '{namespace}'.")
             return render(
@@ -124,6 +121,7 @@ class QuickPrefixCreateView(GenericView):
             )
 
         arin = RIR.objects.filter(name="ARIN").first()
+        member_role = Role.objects.filter(name="Member").first()
         now = timezone.now()
 
         new_prefix = Prefix(
@@ -131,6 +129,7 @@ class QuickPrefixCreateView(GenericView):
             namespace=namespace,
             type="network",
             status=reserved_status,
+            role=member_role,
             rir=arin,
             description=form.cleaned_data["description"],
             date_allocated=now,
@@ -147,6 +146,7 @@ class QuickPrefixCreateView(GenericView):
                 "description": form.cleaned_data["description"],
                 "sdp_ticket_id": form.cleaned_data["sdp_ticket_id"],
                 "rir": "ARIN",
+                "role": "Member",
                 "date_allocated": now,
             },
         )

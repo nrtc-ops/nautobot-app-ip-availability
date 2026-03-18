@@ -313,3 +313,5 @@ public
 # Claude Memsearch
 .memsearch/
 .claude/
+
+.ruff_cache/
