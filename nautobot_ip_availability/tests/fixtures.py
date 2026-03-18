@@ -1,5 +1,6 @@
 """Create fixtures for tests."""
 
+from django.contrib.contenttypes.models import ContentType
 from nautobot.extras.models import Status
 from nautobot.ipam.models import Namespace, Prefix
 
@@ -16,11 +17,16 @@ def create_prefix_test_data():
 
     active_status = Status.objects.get_for_model(Prefix).first()
 
+    # Create "Leasable" status (required by PrefixAvailabilityForm queryset filter)
+    prefix_ct = ContentType.objects.get_for_model(Prefix)
+    leasable_status, _ = Status.objects.get_or_create(name="Leasable", defaults={"color": "4caf50"})
+    leasable_status.content_types.add(prefix_ct)
+
     # Create parent container prefix: 10.100.0.0/20 (covers 10.100.0.0 - 10.100.15.255)
     parent = Prefix.objects.create(
         prefix="10.100.0.0/20",
         type="container",
-        status=active_status,
+        status=leasable_status,
         namespace=namespace,
     )
 
