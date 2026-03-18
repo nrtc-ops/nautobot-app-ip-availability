@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nautobot-ip-availability"
-version = "0.1.0a2"
+version = "0.1.0a3"
 description = "Nautobot IP Availability"
 authors = ["NRTC <devsecops@nrtc.coop>","Michael Dean <mdean@nrtc.coop>"]
 license = "Apache-2.0"
@@ -163,7 +163,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.towncrier]
 package = "nautobot_ip_availability"
 directory = "changes"
-filename = "docs/admin/release_notes/version_X.Y.md"
+filename = "docs/admin/release_notes/version_0.1.md"
 template = "development/towncrier_template.j2"
 start_string = "<!-- towncrier release notes start -->"
 issue_format = "[#{issue}](https://github.com/nrtc-ops/nautobot-app-ip-availability/issues/{issue})"
