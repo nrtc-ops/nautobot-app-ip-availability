@@ -122,6 +122,7 @@ nav:
       - Release Notes:
           - "admin/release_notes/index.md"
           - v1.0: "admin/release_notes/version_1.0.md"
+          - v0.1.0a0: "admin/release_notes/version_0.1.0a0.md"
   - Developer Guide:
       - Extending the App: "dev/extending.md"
       - Contributing to the App: "dev/contributing.md"
