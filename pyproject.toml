@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nautobot-ip-availability"
-version = "0.1.0a1"
+version = "0.1.0a0"
 description = "Nautobot IP Availability"
 authors = ["NRTC <devsecops@nrtc.coop>","Michael Dean <mdean@nrtc.coop>"]
 license = "Apache-2.0"
