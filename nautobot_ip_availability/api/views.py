@@ -2,6 +2,7 @@
 
 from nautobot.ipam.models import Prefix
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -14,6 +15,8 @@ from nautobot_ip_availability.utils import get_available_prefixes_for_parent
 
 class AvailablePrefixesAPIView(APIView):
     """API endpoint to query available IP prefixes within a parent prefix."""
+
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         """Find available prefixes based on parent prefix and desired CIDR sizes."""

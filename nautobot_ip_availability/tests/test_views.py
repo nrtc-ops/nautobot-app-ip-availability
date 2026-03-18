@@ -32,7 +32,7 @@ class PrefixAvailabilityViewTest(NautobotTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("table", response.context)
+        self.assertIn("results", response.context)
         self.assertGreater(response.context["result_count"], 0)
 
     def test_post_invalid_prefix_length(self):
