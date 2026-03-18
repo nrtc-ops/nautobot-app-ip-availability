@@ -1,7 +1,5 @@
 """Utility functions for IP prefix availability calculations."""
 
-
-
 DEFAULT_RESULT_LIMIT = 1000
 
 

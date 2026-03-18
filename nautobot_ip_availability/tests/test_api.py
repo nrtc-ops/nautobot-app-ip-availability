@@ -6,7 +6,7 @@ from nautobot.core.testing import APITestCase
 from nautobot_ip_availability.tests.fixtures import create_prefix_test_data
 
 
-class AvailablePrefixesAPITest(APITestCase):
+class AvailablePrefixesAPITest(APITestCase):  # pylint: disable=too-many-ancestors
     """Test the AvailablePrefixesAPIView."""
 
     @classmethod
@@ -21,6 +21,7 @@ class AvailablePrefixesAPITest(APITestCase):
             url,
             {"parent_prefix": str(self.parent.pk), "prefix_lengths": [24]},
             format="json",
+            **self.header,
         )
         self.assertEqual(response.status_code, 200)
         data = response.json()
@@ -35,6 +36,7 @@ class AvailablePrefixesAPITest(APITestCase):
             url,
             {"parent_prefix": "00000000-0000-0000-0000-000000000000", "prefix_lengths": [24]},
             format="json",
+            **self.header,
         )
         self.assertEqual(response.status_code, 404)
 
@@ -45,11 +47,12 @@ class AvailablePrefixesAPITest(APITestCase):
             url,
             {"parent_prefix": str(self.parent.pk), "prefix_lengths": [20]},
             format="json",
+            **self.header,
         )
         self.assertEqual(response.status_code, 400)
 
     def test_post_missing_fields(self):
         """POST without required fields should return 400."""
         url = reverse("plugins-api:nautobot_ip_availability-api:available_prefixes")
-        response = self.client.post(url, {}, format="json")
+        response = self.client.post(url, {}, format="json", **self.header)
         self.assertEqual(response.status_code, 400)

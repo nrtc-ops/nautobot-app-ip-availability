@@ -135,7 +135,7 @@ class QuickPrefixCreateView(GenericView):
             description=form.cleaned_data["description"],
             date_allocated=now,
         )
-        new_prefix._custom_field_data["sdp_ticket_id"] = form.cleaned_data["sdp_ticket_id"]
+        new_prefix.cf["sdp_ticket_id"] = form.cleaned_data["sdp_ticket_id"]
         new_prefix.save()
 
         return render(
